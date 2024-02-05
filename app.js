@@ -3,6 +3,7 @@ const app = express();
 var bodyParser = require('body-parser');
 const cors = require('cors');
 
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({
     extended: false
 }));
@@ -24,27 +25,33 @@ const uri = process.env.MONGODB_URI;
 // })
 // );
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.sendFile(__dirname + '/express/index.html');
 });
 
 app.post('/post', function (req, res) {
-    let p1 = req.body.p1;
+    let uid = req.body.uid;
+    let data = req.body.data;
+    let key = req.body.key;
     res.send(
-        `message: ${p1}`
+        `
+        uid: ${req.body.uid},
+        data: ${req.body.data},
+        key: ${req.body.key},
+        `
     );
 });
 
 app.post('/api/users', (req, res) => {
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-     
-    });
-    user.save()
-        .then(() => res.send(user))
-        .catch(err => res.status(400).send(err.message));
-}
+        const user = new User({
+            name: req.body.name,
+            email: req.body.email,
+
+        });
+        user.save()
+            .then(() => res.send(user))
+            .catch(err => res.status(400).send(err.message));
+    }
 );
 
 
